@@ -1,0 +1,17 @@
+#!/bin/sh -eu
+#
+# Client for is-even JavaScript library:
+# https://github.com/samuelmarina/is-even
+#
+# Requires: curl, grep, sed
+
+if [ "$#" -lt 1 ]; then
+    echo "Usage: $(basename $0) <number>"
+    exit 1
+fi
+
+echo "Calculating..." >&2
+curl -s https://raw.githubusercontent.com/samuelmarina/is-even/main/index.js |
+    grep "=== *$1 *)" |
+    sed "s/.* return //; s/true;/$1 is even./; s/false;/$1 is odd./;" |
+    grep "^$1 " || echo "$1 is either odd, or even, or both."
